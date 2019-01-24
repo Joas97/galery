@@ -1,12 +1,14 @@
 import React from 'react';
 import { render } from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
+
+import AppRoutes from './routes.js';
+
 import './index.css';
-import App from './Components/App';
-// import * as serviceWorker from './serviceWorker';
 
 render(
-	<App />, 
+	<Router>
+		<AppRoutes /> 
+	</Router>,
 	document.getElementById('body')
 );
-
-// serviceWorker.unregister();

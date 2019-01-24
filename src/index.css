@@ -6,9 +6,24 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #3931af;
+    background: -webkit-linear-gradient(to right, rgb(0, 95, 182), rgb(46, 16, 158)); 
+    background: linear-gradient(to right, rgb(0, 95, 182), rgb(46, 16, 158)); 
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.login_image {
+	text-align: center;
+}
+
+.logo_img{
+	background: #fff;
+    border-radius: 6rem;
+    width: 25%;
+    margin-top: -15%;
+}
+
