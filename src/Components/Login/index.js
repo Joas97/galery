@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import withStyles from '@material-ui/core/styles/withStyles';
 import logo from './login.png';
+import { Redirect } from 'react-router'
+import './login.css';
 
 const styles = theme => ({
   main: {
@@ -18,7 +20,7 @@ const styles = theme => ({
       width: 400,
       marginLeft: 'auto',
       marginRight: 'auto',
-    },
+    }
   },
   paper: {
     marginTop: theme.spacing.unit * 15,
@@ -55,13 +57,41 @@ class Login extends Component {
     });
   }
 
-  handleSubmit = event => {
+  handleSubmit = async (event) => {
     event.preventDefault();
+
+    const url = 'http://localhost:3000/auth/login';
     
+    const settings = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state)
+    };
+    
+    const myRequest = new Request(url, settings);
+
+    await fetch(myRequest)
+    .then(response => response.json())
+    .then(data => {
+      if(data.message !== "Incorrect username or password"){
+        this.setState({
+          isLogin: true
+        });
+      }
+    })
+    .catch(error => console.log(error))
   }
+
 
   render() {
     const { classes } = this.props;
+    if(this.state.isLogin){
+      return <Redirect to='/Images'/>;
+    }
+
     return (
       <main className={classes.main}>
         <CssBaseline />
@@ -100,6 +130,7 @@ class Login extends Component {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={this.handleSubmit}
             >
               Sign in
             </Button>

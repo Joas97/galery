@@ -4,11 +4,9 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import AppRoutes from './routes.js';
 
-import './index.css';
-
 render(
 	<Router>
-		<AppRoutes /> 
+		<AppRoutes />
 	</Router>,
 	document.getElementById('body')
 );
