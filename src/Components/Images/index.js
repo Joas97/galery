@@ -6,6 +6,12 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 const styles = theme => ({
   layout: {
     width: 'auto',
@@ -37,35 +43,63 @@ class Images extends Component{
 			"email": '',
 			"review": '',
 			"facebook": '',
-			"image": []
+			"image": null,
+			"open": false
+
 		};
+		this.baseState = this.state;
+		this.handleFileUpload = this.handleFileUpload.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
 	handleSubmit = event => {
 		event.preventDefault();
-		const files = Array.from(this.state.image)
 		const formData = new FormData();
-		files.forEach((file, i) => {
-	      formData.append(i, file)
-	    });
-		console.log(formData);
+
+		formData.append('name', this.state.name);
+		formData.append('review', this.state.review);
+		formData.append('image', this.state.image[0]);
+
+		const url = "http://localhost:3000/images";
+
+		const settings = {
+			method: 'POST',
+			body: formData
+		};
+
+		const myRequest = new Request(url, settings);
+
+		fetch(myRequest)
+		.then(response => response.json())
+		.then(data => this.setState({ open: true }))
+		.catch(error => console.log(error));
+
+		this.setState(this.baseState);
 	}
 
 
 	handleInputChange = event => {
-		console.log(event.target.value);
+		const { name, value } = event.target;
 		this.setState({
-	      [event.target.id]: event.target.value
+	      [name]: value
 	    });
+
 	}
+
+	handleFileUpload = event => {
+		this.setState({image: event.target.files});
+	}
+
+	handleClose = () => {
+    	this.setState({ open: false });
+  	};
 
 
 	render(){
 		const { classes } = this.props;
-   
-		return(
+		
+   		return(
 			<Fragment>
 				<Navbar />
 				<main className={classes.layout}>
@@ -76,9 +110,9 @@ class Images extends Component{
 				            </Typography>
 							<Grid container spacing={24}>
 								<Grid item xs={12} sm={12}>
-									<TextField 
-										required 
-										id="name" 
+									<TextField
+										required
+										name="name" 
 										label="Name" 
 										value={this.state.name}  
 										onChange={this.handleInputChange} 
@@ -87,8 +121,7 @@ class Images extends Component{
 								</Grid>
 								<Grid item xs={12} sm={6}>
 									<TextField 
-										required 
-										id="email" 
+										name="email" 
 										label="Email" 
 										value={this.state.email}  
 										onChange={this.handleInputChange} 
@@ -97,8 +130,7 @@ class Images extends Component{
 								</Grid>
 								<Grid item xs={12} sm={6}>
 									<TextField 
-										required 
-										id="facebook" 
+										name="facebook" 
 										label="Facebook" 
 										value={this.state.facebook}  
 										onChange={this.handleInputChange} 
@@ -106,11 +138,11 @@ class Images extends Component{
 									/>
 								</Grid>
 								<Grid item xs={9} sm={10}>
-									<TextField 
-										required
+									<TextField
+										required 
 										multiline 
 										rowsMax="4" 
-										id="review" 
+										name="review" 
 										label="Review" 
 										value={this.state.review}  
 										onChange={this.handleInputChange} 
@@ -123,10 +155,9 @@ class Images extends Component{
 										style={{display: 'none'}}
 										id="image_file" 
 										type="file"
-										value={this.state.image}  
-										onChange={this.handleInputChange} 
+										onChange={this.handleFileUpload} 
 									/>
-								    <label id="image" htmlFor="image_file" style={{marginLeft: 15}}>
+								    <label htmlFor="image_file" style={{marginLeft: 15}}>
 								        <IconButton color="primary" component="span">
 								          <PhotoCamera />
 								        </IconButton>
@@ -147,6 +178,23 @@ class Images extends Component{
 						</form>
 			        </Paper>
 			    </main>
+			    <Dialog
+		          open={this.state.open}
+		          onClose={this.handleClose}
+		          aria-labelledby="draggable-dialog-title"
+		        >
+		          <DialogTitle id="draggable-dialog-title">Success</DialogTitle>
+		          <DialogContent>
+		            <DialogContentText>
+		              Datos registrados correctamente
+		            </DialogContentText>
+		          </DialogContent>
+		          <DialogActions>
+		            <Button onClick={this.handleClose} color="primary">
+		              OK
+		            </Button>
+		          </DialogActions>
+		        </Dialog>
 			</Fragment>
 		)
 	}
