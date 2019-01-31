@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import withStyles from '@material-ui/core/styles/withStyles';
 import logo from './login.png';
-import { Redirect } from 'react-router'
+import { Redirect } from 'react-router';
 import './login.css';
 
 const styles = theme => ({
@@ -46,8 +46,7 @@ class Login extends Component {
 
     this.state = {
       username: "",
-      password: "",
-      isLogin: false
+      password: ""
     };
   }
 
@@ -60,7 +59,7 @@ class Login extends Component {
   handleSubmit = async (event) => {
     event.preventDefault();
 
-    const url = 'http://localhost:3000/auth/login';
+    const url = 'https://api.lmexpedition.com/auth/login';
     
     const settings = {
       method: 'POST',
@@ -77,9 +76,7 @@ class Login extends Component {
     .then(response => response.json())
     .then(data => {
       if(data.message !== "Incorrect username or password"){
-        this.setState({
-          isLogin: true
-        });
+        localStorage.setItem('session', true);
       }
     })
     .catch(error => console.log(error))
@@ -88,8 +85,10 @@ class Login extends Component {
 
   render() {
     const { classes } = this.props;
-    if(this.state.isLogin){
-      return <Redirect to='/Images'/>;
+    let { from } = this.props.location.state || { from: { pathname: "/Images" } };
+    
+    if(localStorage.getItem('session') === "true"){
+      return <Redirect to={from} />;
     }
 
     return (

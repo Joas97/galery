@@ -12,6 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
   appBar: {
@@ -50,7 +51,7 @@ const styles = theme => ({
     flexDirection: 'column',
   },
   cardMedia: {
-    paddingTop: '56.25%', // 16:9
+    paddingTop: '56.25%', 
   },
   cardContent: {
     flexGrow: 1,
@@ -71,7 +72,7 @@ class Album extends Component {
   }
 
   componentDidMount = async () => {
-    const url = 'http://localhost:3000/Images';
+    const url = 'https://api.lmexpedition.com/Images';
 
     const settings = {
       method : 'GET'
@@ -86,6 +87,10 @@ class Album extends Component {
 
   }
 
+  handleLogin = () => {
+    window.location.href = '/Login';
+  };
+
 	render() {
 		  const { classes } = this.props;
       const  images  = this.state.images;
@@ -96,16 +101,17 @@ class Album extends Component {
 		      <AppBar position="static" className={classes.appBar}>
 		        <Toolbar>
 		          <CameraIcon className={classes.icon} />
-		          <Typography variant="h6" color="inherit" noWrap>
+		          <Typography variant="h6" color="inherit" noWrap style={{'flexGrow': 1}}>
 		            Album layout
 		          </Typography>
+               <Button color="inherit" onClick={this.handleLogin}>Login</Button>
 		        </Toolbar>
 		      </AppBar>
 		      <main>
 		       <div className={classNames(classes.layout, classes.cardGrid)}>
 		           <Grid container spacing={40}>
 		            {images.map(image => (
-		              <Grid item key={image.id} sm={6} md={4} lg={3}>
+		              <Grid item key={image.id} xs={12} sm={6} md={4} lg={4}>
 		                <Card className={classes.card}>
 		                  <CardMedia
 		                    className={classes.cardMedia}
@@ -121,12 +127,7 @@ class Album extends Component {
 		                    </Typography>
 		                  </CardContent>
 		                  <CardActions>
-                        <Typography gutterBottom variant="h5" component="h5">
-                          {image.email}
-		                    </Typography>
-                        <Typography gutterBottom variant="h5" component="h5">
-                          {image.facebook}
-		                    </Typography>
+                          <Typography>{image.email} {image.facebook}</Typography> 
 		                  </CardActions>
 		                </Card>
 		              </Grid>

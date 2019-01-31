@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import Navbar from '../Navbar';
 import { Grid, TextField, Button, Typography }from '@material-ui/core';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -11,6 +10,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 const styles = theme => ({
   layout: {
@@ -58,10 +58,13 @@ class Images extends Component{
 		const formData = new FormData();
 
 		formData.append('name', this.state.name);
+		formData.append('email', this.state.email);
 		formData.append('review', this.state.review);
+		formData.append('facebook', this.state.facebook);
 		formData.append('image', this.state.image[0]);
+		
 
-		const url = "http://localhost:3000/images";
+		const url = "https://api.lmexpedition.com/images";
 
 		const settings = {
 			method: 'POST',
@@ -101,7 +104,6 @@ class Images extends Component{
 		
    		return(
 			<Fragment>
-				<Navbar />
 				<main className={classes.layout}>
 			        <Paper className={classes.paper}>
 						<form onSubmit={this.handleSubmit}>
